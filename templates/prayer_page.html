@@ -36,13 +36,25 @@
 			align-items: center;
 			justify-content: center;
 		}
-		.back-btn:hover { transform: translateY(-2px); filter: brightness(1.05); box-shadow: 0 14px 34px rgba(239, 68, 68, 0.45); }
+		.back-btn:hover { transform: translateY(-1px); filter: brightness(1.05); box-shadow: 0 14px 34px rgba(239, 68, 68, 0.45); }
 		/* Light theme overrides */
 		.light .bg-prayer { background: radial-gradient(1200px 600px at 10% -10%, rgba(255, 200, 150, 0.25), transparent), radial-gradient(1000px 500px at 110% 10%, rgba(255, 180, 220, 0.18), transparent), radial-gradient(800px 400px at 50% 120%, rgba(160, 220, 255, 0.18), transparent), linear-gradient(180deg, #ffffff 0%, #f8fafc 55%, #eef2f7 100%); }
 		.light .pattern { opacity: .2; }
 		.light .back-btn { background: linear-gradient(135deg,#ef4444,#b91c1c); color:#fff; }
 		.light .rounded-3xl { background: rgba(255,255,255,0.9) !important; border-color: rgba(15,23,42,0.08) !important; box-shadow: 0 8px 24px rgba(2,6,23,0.06) !important; }
 		.light pre { color: #0f172a; }
+		/* Hide scrollbar for overflow toolbars */
+		.no-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
+		.no-scrollbar::-webkit-scrollbar { display: none; }
+		/* Tighter buttons on small phones */
+		@media (max-width: 420px) {
+			.toolbar { gap: .35rem; }
+			.back-btn { padding: 0.45rem 0.6rem; border-radius: .75rem; font-size: 11px; }
+			.back-btn:hover { transform: translateY(0); }
+		}
+		/* Ensure the header container doesn't clip hover shadows */
+		.sticky .rounded-2xl { overflow: visible; }
+		.toolbar { padding: .125rem 0; overflow-y: visible; }
 	</style>
 </head>
 <body class="relative min-h-screen bg-prayer text-gray-100">
@@ -61,12 +73,11 @@
             <div class="mx-auto max-w-5xl px-4 sm:px-6 py-4">
                 <div class="flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 px-3 py-2">
                     <a href="{{ url_for('home') }}" class="back-btn text-xs sm:text-sm">← Back</a>
-                    <div class="flex items-center gap-2">
+                    <div class="toolbar flex items-center gap-2 overflow-x-auto no-scrollbar">
                         <button id="decrease" class="back-btn text-xs">A-</button>
                         <button id="increase" class="back-btn text-xs">A+</button>
                         <button id="copy" class="back-btn text-xs">Copy</button>
                         <button id="themeToggle" class="back-btn text-xs" title="Toggle theme">🌙</button>
-                        <button id="favToggle" class="back-btn text-xs" title="Favorite">☆</button>
                     </div>
                 </div>
             </div>
@@ -92,7 +103,6 @@
         const inc = document.getElementById('increase');
         const dec = document.getElementById('decrease');
         const toggle = document.getElementById('themeToggle');
-        const favToggle = document.getElementById('favToggle');
         function getSize() {
             const style = window.getComputedStyle(pre);
             return parseFloat(style.fontSize);
@@ -115,26 +125,7 @@
             window.location.href = "{{ url_for('prayer_page_light', prayer_name=prayer_slug) }}";
         });
 
-        // Favorites: use pathname to get slug
-        function getSlug() {
-            const parts = window.location.pathname.split('/');
-            return parts[parts.length - 1];
-        }
-        function loadFavs() { try { return new Set(JSON.parse(localStorage.getItem('favorites')||'[]')); } catch { return new Set(); } }
-        function saveFavs(set) { localStorage.setItem('favorites', JSON.stringify(Array.from(set))); }
-        const favs = loadFavs();
-        function reflectFavBtn() {
-            const slug = getSlug();
-            const on = favs.has(slug);
-            favToggle.textContent = on ? '★' : '☆';
-        }
-        reflectFavBtn();
-        favToggle?.addEventListener('click', () => {
-            const slug = getSlug();
-            if (favs.has(slug)) favs.delete(slug); else favs.add(slug);
-            saveFavs(favs);
-            reflectFavBtn();
-        });
+        // Favorite (star) option removed for a cleaner mobile toolbar.
     </script>
 </body>
 </html>
