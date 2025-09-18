@@ -3,24 +3,26 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Prayers</title>
+	<title>Prayers • Light</title>
 	<script src="https://cdn.tailwindcss.com"></script>
 	<style>
 		@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
 		body { font-family: 'Inter', sans-serif; overflow-x: hidden; }
-		/* Subtle animated gradient background */
-		.bg-prayer {
-			background: radial-gradient(1200px 600px at 10% -10%, rgba(253, 186, 116, 0.15), transparent),
-				radial-gradient(1000px 500px at 110% 10%, rgba(244, 114, 182, 0.12), transparent),
-				radial-gradient(800px 400px at 50% 120%, rgba(125, 211, 252, 0.10), transparent),
-				linear-gradient(180deg, #0b1020 0%, #111827 60%, #0b1020 100%);
+		/* Fresh light background */
+		.bg-prayer-light {
+			background:
+				radial-gradient(1200px 600px at 10% -10%, rgba(255, 210, 170, 0.35), transparent),
+				radial-gradient(1000px 500px at 110% 10%, rgba(255, 190, 230, 0.30), transparent),
+				radial-gradient(800px 400px at 50% 120%, rgba(180, 230, 255, 0.28), transparent),
+				linear-gradient(180deg, #ffffff 0%, #f8fbff 55%, #f1f5fb 100%);
 		}
-		/* Decorative pattern overlay */
-		.pattern {
-			mask-image: radial-gradient(circle at 50% 50%, black, transparent 70%);
-			opacity: 0.25;
+		.pattern { opacity: 0.2; }
+		.card-surface {
+			background: rgba(255,255,255,0.86);
+			backdrop-filter: blur(8px);
+			border: 1px solid rgba(15,23,42,0.08);
+			box-shadow: 0 20px 40px rgba(2,6,23,0.06);
 		}
-		/* Modern rounded button with hover */
 		.hanuman-button {
 			background: linear-gradient(135deg, #ef4444, #b91c1c);
 			color: #fff;
@@ -28,57 +30,50 @@
 			padding: 0.875rem 1rem;
 			font-weight: 700;
 			letter-spacing: 0.02em;
-			box-shadow: 0 8px 24px rgba(239, 68, 68, 0.35);
+			box-shadow: 0 10px 24px rgba(239, 68, 68, 0.25);
 			transition: transform 220ms ease, box-shadow 220ms ease, filter 220ms ease;
 			text-decoration: none;
-			display: inline-flex;
-			align-items: center;
-			justify-content: center;
-			text-align: center;
+			display: inline-flex; align-items: center; justify-content: center; text-align: center;
 		}
-		.hanuman-button:hover { transform: translateY(-2px); filter: brightness(1.05); box-shadow: 0 14px 34px rgba(239, 68, 68, 0.45); }
+		.hanuman-button:hover { transform: translateY(-2px); filter: brightness(1.05); box-shadow: 0 16px 34px rgba(239, 68, 68, 0.35); }
 		.hanuman-button:active { transform: translateY(0); }
+		/* Secondary amber button */
+		.btn-amber { background:linear-gradient(135deg,#f59e0b,#b45309); box-shadow:0 10px 24px rgba(245,158,11,.25); }
 
-		/* Modal styles */
-		.modal-bg { position: fixed; inset: 0; background: rgba(2,6,23,0.6); backdrop-filter: blur(6px); display: grid; place-items: center; z-index: 50; }
-		.modal-card { width: 100%; max-width: 36rem; border-radius: 1rem; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.06); padding: 1rem; box-shadow: 0 20px 60px rgba(0,0,0,0.35); }
+		/* Modal styles (same behavior) */
+		.modal-bg { position: fixed; inset: 0; background: rgba(15,23,42,0.25); backdrop-filter: blur(6px); display: grid; place-items: center; z-index: 50; }
+		.modal-card { width: 100%; max-width: 36rem; border-radius: 1rem; border: 1px solid rgba(15,23,42,0.08); background: #ffffff; padding: 1rem; box-shadow: 0 30px 60px rgba(2,6,23,0.15); color:#0f172a; }
 		.hidden { display: none; }
 
-		/* Diya (lamp) styles */
-		.diya { position: relative; width: 120px; height: 80px; background: radial-gradient(100% 70% at 50% 60%, #a16207, #78350f 60%); border-radius: 60% 60% 35% 35% / 70% 70% 30% 30%; box-shadow: inset 0 -10px 30px rgba(0,0,0,0.5), 0 10px 30px rgba(0,0,0,0.2); }
-		.diya .oil { position: absolute; left: 12%; right: 12%; top: 40%; height: 30%; background: radial-gradient(100% 100% at 50% 20%, #f59e0b, #b45309 70%); border-radius: 50%; filter: blur(0.2px); }
+		/* Diya (lamp) */
+		.diya { position: relative; width: 120px; height: 80px; background: radial-gradient(100% 70% at 50% 60%, #f59e0b, #b45309 60%); border-radius: 60% 60% 35% 35% / 70% 70% 30% 30%; box-shadow: inset 0 -10px 30px rgba(0,0,0,0.25), 0 10px 30px rgba(0,0,0,0.08); }
+		.diya .oil { position: absolute; left: 12%; right: 12%; top: 40%; height: 30%; background: radial-gradient(100% 100% at 50% 20%, #fde68a, #f59e0b 70%); border-radius: 50%; }
 		.diya .wick { position: absolute; left: 50%; transform: translateX(-50%); top: 22%; width: 6px; height: 18px; background: #111827; border-radius: 3px; }
-		.flame { position: absolute; left: 50%; transform: translateX(-50%); top: -12px; width: 18px; height: 34px; background: radial-gradient(60% 80% at 50% 20%, #fff7ed, #fde68a 45%, #f59e0b 70%, rgba(245,158,11,0) 100%); border-radius: 50% 50% 50% 50% / 65% 65% 35% 35%; opacity: 0; filter: blur(0.3px); }
+		.flame { position: absolute; left: 50%; transform: translateX(-50%); top: -12px; width: 18px; height: 34px; background: radial-gradient(60% 80% at 50% 20%, #fff7ed, #fde68a 45%, #f59e0b 70%, rgba(245,158,11,0) 100%); border-radius: 50% 50% 50% 50% / 65% 65% 35% 35%; opacity: 0; }
 		.flame.lit { opacity: 1; animation: flicker 1.6s infinite ease-in-out alternate; }
-		@keyframes flicker {
-			0% { transform: translateX(-50%) translateY(0) scale(1); filter: brightness(1); }
-			50% { transform: translateX(-50%) translateY(-2px) scale(1.05); filter: brightness(1.1); }
-			100% { transform: translateX(-50%) translateY(0) scale(0.97); filter: brightness(0.95); }
-		}
+		@keyframes flicker { 0%{transform:translateX(-50%) translateY(0) scale(1);} 50%{transform:translateX(-50%) translateY(-2px) scale(1.05);} 100%{transform:translateX(-50%) translateY(0) scale(0.97);} }
 	</style>
 </head>
-<body class="relative min-h-screen bg-prayer text-gray-100">
+<body class="relative min-h-screen bg-prayer-light text-slate-800">
 	<!-- Decorative background pattern -->
 	<svg class="pointer-events-none absolute inset-0 w-full h-full pattern" aria-hidden="true">
 		<defs>
 			<pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-				<path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+				<path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(2,6,23,0.06)" stroke-width="1"/>
 			</pattern>
 		</defs>
 		<rect width="100%" height="100%" fill="url(#grid)"/>
 	</svg>
 
-	<!-- Top glass header -->
 	<header class="relative z-20">
 		<div class="mx-auto max-w-6xl px-4 sm:px-6 pt-6">
-			<div class="flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl px-4 py-3">
+			<div class="flex items-center justify-between rounded-2xl card-surface px-4 py-3">
 				<div class="flex items-center gap-3">
-					<span class="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-rose-500 to-amber-500 text-white shadow">🪔</span>
-					<span class="text-lg font-bold tracking-tight">Prayer Collection</span>
+					<span class="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-amber-400 to-pink-400 text-white shadow">🪔</span>
+					<span class="text-lg font-bold tracking-tight text-slate-900">Prayer Collection</span>
 				</div>
 				<div class="flex items-center gap-3">
-					<span class="text-xs text-gray-300 hidden sm:inline">May peace be with you</span>
-					<button id="themeToggle" class="hanuman-button text-xs px-3 py-2" style="padding:.5rem .75rem">🌙</button>
+					<a href="{{ url_for('home') }}" class="hanuman-button text-xs px-3 py-2" style="padding:.5rem .75rem; background:linear-gradient(135deg,#0ea5e9,#2563eb); box-shadow:0 10px 24px rgba(14,165,233,.25)">Dark</a>
 				</div>
 			</div>
 		</div>
@@ -86,59 +81,56 @@
 
 	<div class="relative z-10 flex items-start justify-center px-3 sm:px-6 py-6 sm:py-10">
 		<div class="w-full max-w-6xl">
-			<div class="rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-2xl">
+			<div class="rounded-3xl card-surface shadow-2xl">
 				<div class="px-6 sm:px-10 py-8 sm:py-10">
 					<div class="text-center">
-						<h1 class="text-4xl sm:text-5xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-amber-300 via-pink-300 to-sky-300 tracking-tight">Prayers</h1>
-						<p class="mt-3 sm:mt-4 text-base sm:text-lg text-gray-300 max-w-2xl mx-auto">Browse prayers in English. Tap any card to read.</p>
+						<h1 class="text-4xl sm:text-5xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-rose-500 via-amber-500 to-sky-500 tracking-tight">Prayers</h1>
+						<p class="mt-3 sm:mt-4 text-base sm:text-lg text-slate-600 max-w-2xl mx-auto">Browse prayers in English. Tap any card to read.</p>
 					</div>
 
-					<!-- Intro spacing -->
 					<div class="mt-6 sm:mt-8"></div>
 
-					<!-- Responsive grid -->
 					<div id="grid" class="mt-4 sm:mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
 						{% for prayer in prayers %}
-						<a href="{{ url_for('prayer_page', prayer_name=prayer) }}" class="group relative rounded-2xl border border-white/20 bg-white/10 hover:bg-white/15 transition-colors p-4 sm:p-5 shadow-lg hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-amber-300/60 min-h-16">
+						<a href="{{ url_for('prayer_page_light', prayer_name=prayer) }}" class="group relative rounded-2xl border border-slate-200 bg-white hover:bg-slate-50 transition-colors p-4 sm:p-5 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-amber-300/60 min-h-16">
 							<span class="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity" style="background: radial-gradient(600px 120px at var(--x,50%) var(--y,50%), rgba(251,191,36,0.15), transparent 40%);"></span>
 							<div class="relative flex items-center gap-3">
-								<span class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-rose-500 to-amber-500 text-white shadow-md group-hover:scale-105 transition-transform font-extrabold tracking-tight" style="font-feature-settings:'tnum' 1;">{{ '{:02d}'.format(loop.index) }}</span>
-								<span class="font-semibold text-sm sm:text-base text-gray-100 group-hover:text-white">{{ prayer.replace('-', ' ').title() }}</span>
+								<span class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-rose-400 to-amber-400 text-white shadow-md group-hover:scale-105 transition-transform font-extrabold tracking-tight" style="font-feature-settings:'tnum' 1;">{{ '{:02d}'.format(loop.index) }}</span>
+								<span class="font-semibold text-sm sm:text-base text-slate-900 group-hover:text-slate-900">{{ prayer.replace('-', ' ').title() }}</span>
 							</div>
 						</a>
 						{% endfor %}
 					</div>
 
-					<!-- Secondary actions -->
 					<div class="mt-10 flex flex-wrap items-center justify-center gap-3">
 						<button id="dailyIntentionBtn" type="button" class="hanuman-button text-sm sm:text-base">Daily Intention</button>
-						<button id="lightLampBtn" type="button" class="hanuman-button text-sm sm:text-base" style="background:linear-gradient(135deg,#f59e0b,#b45309); box-shadow:0 8px 24px rgba(245,158,11,.35)">Light a Lamp</button>
-						<span id="intentionPill" class="hidden rounded-full bg-white/10 px-3 py-2 text-xs text-amber-200 border border-white/10">Today's intention saved</span>
+						<button id="lightLampBtn" type="button" class="hanuman-button text-sm sm:text-base btn-amber">Light a Lamp</button>
+						<span id="intentionPill" class="hidden rounded-full bg-white px-3 py-2 text-xs text-amber-700 border border-amber-200">Today's intention saved</span>
 					</div>
 				</div>
 			</div>
 
-			<!-- Intention Modal -->
+			<!-- Intention Modal (light) -->
 			<div id="intentionModal" class="modal-bg hidden">
 				<div class="modal-card">
 					<h2 class="text-lg font-bold mb-2">Set your daily intention</h2>
-					<p class="text-sm text-gray-300 mb-3">Write a short intention for today. It will be saved in your browser.</p>
-					<textarea id="intentionInput" rows="3" class="w-full rounded-lg bg-white/5 border border-white/10 p-3 text-sm focus:outline-none focus:ring-2 focus:ring-amber-300/60" placeholder="e.g., Be calm and kind"></textarea>
+					<p class="text-sm text-slate-600 mb-3">Write a short intention for today. It will be saved in your browser.</p>
+					<textarea id="intentionInput" rows="3" class="w-full rounded-lg bg-white border border-slate-200 p-3 text-sm focus:outline-none focus:ring-2 focus:ring-amber-300/60" placeholder="e.g., Be calm and kind"></textarea>
 					<div class="mt-4 flex justify-end gap-2">
-						<button id="intentionCancel" class="rounded-lg px-3 py-2 text-sm bg-white/10 border border-white/10">Cancel</button>
+						<button id="intentionCancel" class="rounded-lg px-3 py-2 text-sm bg-slate-100 border border-slate-200">Cancel</button>
 						<button id="intentionSave" class="hanuman-button text-sm">Save</button>
 					</div>
 				</div>
 			</div>
 
-			<!-- Lamp Modal -->
+			<!-- Lamp Modal (light) -->
 			<div id="lampModal" class="modal-bg hidden">
 				<div class="modal-card max-w-md">
 					<div class="flex items-center justify-between mb-2">
 						<h2 class="text-lg font-bold">Light a Lamp</h2>
-						<button id="lampClose" class="rounded-lg px-2 py-1 text-sm bg-white/10 border border-white/10">✕</button>
+						<button id="lampClose" class="rounded-lg px-2 py-1 text-sm bg-slate-100 border border-slate-200">✕</button>
 					</div>
-					<p class="text-sm text-gray-300">Offer light and gratitude. Click "Light" to ignite the flame.</p>
+					<p class="text-sm text-slate-600">Offer light and gratitude. Click "Light" to ignite the flame.</p>
 					<div class="mt-4 flex items-center justify-center">
 						<div class="diya">
 							<div class="flame" id="lampFlame"></div>
@@ -147,23 +139,23 @@
 						</div>
 					</div>
 					<div class="mt-4 flex items-center justify-between">
-						<div class="text-xs text-gray-300">Lamps lit today: <span id="lampCount" class="font-semibold text-amber-300">0</span></div>
+						<div class="text-xs text-slate-700">Lamps lit today: <span id="lampCount" class="font-semibold text-amber-600">0</span></div>
 						<div class="flex gap-2">
-							<button id="lampLight" class="hanuman-button text-sm" style="background:linear-gradient(135deg,#f59e0b,#b45309); box-shadow:0 8px 24px rgba(245,158,11,.35)">Light</button>
-							<button id="lampDone" class="rounded-lg px-3 py-2 text-sm bg-white/10 border border-white/10">Close</button>
+							<button id="lampLight" class="hanuman-button text-sm btn-amber">Light</button>
+							<button id="lampDone" class="rounded-lg px-3 py-2 text-sm bg-slate-100 border border-slate-200">Close</button>
 						</div>
 					</div>
 				</div>
 			</div>
 
-			<p class="mt-6 text-center text-xs text-gray-400">May peace and devotion guide your day.</p>
+			<p class="mt-6 text-center text-xs text-slate-500">May peace and devotion guide your day.</p>
 		</div>
 	</div>
 
 	<!-- Footer -->
 	<footer class="relative z-10 pb-6">
 		<div class="mx-auto max-w-6xl px-4 sm:px-6">
-			<div class="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl px-4 py-3 text-center text-xs text-gray-400">Designed with reverence • 🪔</div>
+			<div class="rounded-2xl card-surface px-4 py-3 text-center text-xs text-slate-500">Designed with reverence • 🪔</div>
 		</div>
 	</footer>
 
@@ -177,14 +169,6 @@
 			});
 		});
 
-		// Theme button now links to dedicated light UI
-		const toggle = document.getElementById('themeToggle');
-		toggle?.addEventListener('click', () => {
-			window.location.href = "{{ url_for('home_light') }}";
-		});
-	</script>
-
-	<script>
 		// Utilities: date key for today
 		function todayKey(prefix){
 			const d = new Date();
@@ -267,23 +251,8 @@
 			}
 		});
 
-		// Initialize state on load
 		refreshIntentionPill();
 		loadLampCount();
 	</script>
-
-	<style>
-		/* Light theme overrides */
-		.light .bg-prayer { background: radial-gradient(1200px 600px at 10% -10%, rgba(255, 200, 150, 0.25), transparent), radial-gradient(1000px 500px at 110% 10%, rgba(255, 180, 220, 0.18), transparent), radial-gradient(800px 400px at 50% 120%, rgba(160, 220, 255, 0.18), transparent), linear-gradient(180deg, #ffffff 0%, #f8fafc 55%, #eef2f7 100%); }
-		.light .pattern { opacity: .2; }
-		.light .title { color: #0f172a !important; }
-		.light .group { color: #0f172a; }
-		.light #grid a.group { background: #ffffff; border-color: rgba(15,23,42,0.08); box-shadow: 0 4px 14px rgba(2, 6, 23, 0.06); }
-		.light #grid a.group:hover { background: #ffffff; box-shadow: 0 10px 24px rgba(2, 6, 23, 0.10); }
-		.light .hanuman-button { background: linear-gradient(135deg,#ef4444,#b91c1c); color:#fff; }
-		.light header .rounded-2xl, .light footer .rounded-2xl { background: rgba(255,255,255,0.7); border-color: rgba(15,23,42,0.08); }
-		/* Favorite visual */
-		.fav-btn svg { filter: drop-shadow(0 1px 1px rgba(0,0,0,.2)); }
-	</style>
 </body>
 </html>
