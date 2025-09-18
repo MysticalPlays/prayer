@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ prayer_title }}</title>
+	<script src="https://cdn.tailwindcss.com"></script>
+	<style>
+		@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+		body { font-family: 'Inter', sans-serif; overflow-x: hidden; }
+		.bg-prayer {
+			background: radial-gradient(1200px 600px at 10% -10%, rgba(253, 186, 116, 0.15), transparent),
+				radial-gradient(1000px 500px at 110% 10%, rgba(244, 114, 182, 0.12), transparent),
+				radial-gradient(800px 400px at 50% 120%, rgba(125, 211, 252, 0.10), transparent),
+				linear-gradient(180deg, #0b1020 0%, #111827 60%, #0b1020 100%);
+		}
+		.pattern { opacity: 0.25; }
+		pre {
+			white-space: pre-wrap;
+			word-wrap: break-word;
+			word-break: normal;
+			line-height: 1.75;
+			text-align: center;
+		}
+		.back-btn {
+			background: linear-gradient(135deg, #ef4444, #b91c1c);
+			color: #fff;
+			border-radius: 0.875rem;
+			padding: 0.6rem 1rem;
+			font-weight: 700;
+			letter-spacing: 0.02em;
+			box-shadow: 0 8px 24px rgba(239, 68, 68, 0.35);
+			transition: transform 220ms ease, box-shadow 220ms ease, filter 220ms ease;
+			text-decoration: none;
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+		}
+		.back-btn:hover { transform: translateY(-2px); filter: brightness(1.05); box-shadow: 0 14px 34px rgba(239, 68, 68, 0.45); }
+		/* Light theme overrides */
+		.light .bg-prayer { background: radial-gradient(1200px 600px at 10% -10%, rgba(255, 200, 150, 0.25), transparent), radial-gradient(1000px 500px at 110% 10%, rgba(255, 180, 220, 0.18), transparent), radial-gradient(800px 400px at 50% 120%, rgba(160, 220, 255, 0.18), transparent), linear-gradient(180deg, #ffffff 0%, #f8fafc 55%, #eef2f7 100%); }
+		.light .pattern { opacity: .2; }
+		.light .back-btn { background: linear-gradient(135deg,#ef4444,#b91c1c); color:#fff; }
+		.light .rounded-3xl { background: rgba(255,255,255,0.9) !important; border-color: rgba(15,23,42,0.08) !important; box-shadow: 0 8px 24px rgba(2,6,23,0.06) !important; }
+		.light pre { color: #0f172a; }
+	</style>
+</head>
+<body class="relative min-h-screen bg-prayer text-gray-100">
+    <svg class="pointer-events-none absolute inset-0 w-full h-full pattern" aria-hidden="true">
+		<defs>
+			<pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+				<path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+			</pattern>
+		</defs>
+		<rect width="100%" height="100%" fill="url(#grid)"/>
+	</svg>
+
+    <div class="relative z-10">
+        <!-- Sticky header with actions -->
+        <div class="sticky top-0 bg-gradient-to-b from-[#0b1020]/70 to-transparent backdrop-blur-xl z-20">
+            <div class="mx-auto max-w-5xl px-4 sm:px-6 py-4">
+                <div class="flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 px-3 py-2">
+                    <a href="{{ url_for('home') }}" class="back-btn text-xs sm:text-sm">← Back</a>
+                    <div class="flex items-center gap-2">
+                        <button id="decrease" class="back-btn text-xs">A-</button>
+                        <button id="increase" class="back-btn text-xs">A+</button>
+                        <button id="copy" class="back-btn text-xs">Copy</button>
+                        <button id="themeToggle" class="back-btn text-xs" title="Toggle theme">🌙</button>
+                        <button id="favToggle" class="back-btn text-xs" title="Favorite">☆</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main -->
+        <div class="mx-auto max-w-5xl px-3 sm:px-6 py-8 sm:py-12">
+            <div class="rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-2xl">
+                <div class="px-6 sm:px-10 py-8 sm:py-12 text-center">
+                    <h1 class="text-3xl sm:text-4xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-amber-300 via-pink-300 to-sky-300 tracking-tight">{{ prayer_title }}</h1>
+                    <div class="mt-6 sm:mt-8 bg-white/5 p-5 sm:p-8 rounded-2xl border border-white/10 text-gray-100 leading-relaxed text-center shadow-inner">
+                        <pre id="content" class="w-full text-sm sm:text-base md:text-lg max-w-prose mx-auto">{{ prayer_text }}</pre>
+                    </div>
+                </div>
+            </div>
+            <p class="mt-6 text-center text-xs text-gray-400">Peace be upon all beings.</p>
+        </div>
+    </div>
+
+    <script>
+        const pre = document.getElementById('content');
+        const copyBtn = document.getElementById('copy');
+        const inc = document.getElementById('increase');
+        const dec = document.getElementById('decrease');
+        const toggle = document.getElementById('themeToggle');
+        const favToggle = document.getElementById('favToggle');
+        function getSize() {
+            const style = window.getComputedStyle(pre);
+            return parseFloat(style.fontSize);
+        }
+        function setSize(px) {
+            pre.style.fontSize = Math.max(12, Math.min(28, px)) + 'px';
+        }
+        inc?.addEventListener('click', () => setSize(getSize() + 2));
+        dec?.addEventListener('click', () => setSize(getSize() - 2));
+        copyBtn?.addEventListener('click', async () => {
+            try {
+                await navigator.clipboard.writeText(pre.textContent || '');
+                copyBtn.textContent = 'Copied!';
+                setTimeout(() => (copyBtn.textContent = 'Copy'), 1200);
+            } catch {}
+        });
+
+        // Theme button now links to dedicated light prayer UI
+        toggle?.addEventListener('click', () => {
+            window.location.href = "{{ url_for('prayer_page_light', prayer_name=prayer_slug) }}";
+        });
+
+        // Favorites: use pathname to get slug
+        function getSlug() {
+            const parts = window.location.pathname.split('/');
+            return parts[parts.length - 1];
+        }
+        function loadFavs() { try { return new Set(JSON.parse(localStorage.getItem('favorites')||'[]')); } catch { return new Set(); } }
+        function saveFavs(set) { localStorage.setItem('favorites', JSON.stringify(Array.from(set))); }
+        const favs = loadFavs();
+        function reflectFavBtn() {
+            const slug = getSlug();
+            const on = favs.has(slug);
+            favToggle.textContent = on ? '★' : '☆';
+        }
+        reflectFavBtn();
+        favToggle?.addEventListener('click', () => {
+            const slug = getSlug();
+            if (favs.has(slug)) favs.delete(slug); else favs.add(slug);
+            saveFavs(favs);
+            reflectFavBtn();
+        });
+    </script>
+</body>
+</html>
